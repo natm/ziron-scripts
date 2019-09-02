@@ -23,4 +23,7 @@ $ export ZIRON_AUTH_TOKEN=xxxxxxxxxxxxxxxxx
 
 * Outbound calls to special numbers - `xx.py`
 * Summary of monthly charged calls by caller ID - `yy.py`
+* Monthly call volume in/out summary caller/callee - `cc.py`
 * Table of assigned numbers - `zz.py`
+* UK available number search - `aa.py`
+* UK available number purchase - `bb.py`
