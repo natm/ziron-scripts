@@ -1,8 +1,8 @@
 # Ziron API scripts
 
-A selection of scripts for working with the [Ziron](https://www.ziron.com/) [API](https://zironuk.atlassian.net/wiki/spaces/docs/pages/524317/Overview).
+A selection of scripts for working with the [Ziron developer API](https://zironuk.atlassian.net/wiki/spaces/docs/pages/524317/Overview).
 
-Ziron are a voice and messaging provider, based in the UK offering SIP termination / trunk services. I am not affiliated with them, I'm just a customer.
+[Ziron](https://www.ziron.com/) are a voice and messaging provider, based in the UK offering SIP termination / trunk services. I am not affiliated with them, I'm just a customer.
 
 ## Environment variables
 
