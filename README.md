@@ -29,3 +29,16 @@ $ export ZIRON_AUTH_TOKEN=xxxxxxxxxxxxxxxxx
 * Table of assigned numbers - `zz.py`
 * UK available number search - `aa.py`
 * UK available number purchase - `bb.py`
+
+## License ##
+
+MIT
+
+## Contributing guidelines ##
+
+* Fork the repo
+* Create a branch
+* Make your changes
+* Open a pull request back from your branch to master in this repo
+
+Found a bug? open an [issue](https://github.com/natm/ziron-scripts/issues).
