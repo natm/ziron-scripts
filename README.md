@@ -4,6 +4,8 @@ A selection of scripts for working with the [Ziron developer API](https://zironu
 
 [Ziron](https://www.ziron.com/) are a voice and messaging provider, based in the UK offering SIP termination / trunk services. I am not affiliated with them, I'm just a customer.
 
+These we developed due to the functionality being missing in their [dashboard](https://dashboard.ziron.com/), I hope these are handy for other customers.
+
 ## Environment variables
 
 These environement variables need to be set prior to running any of the scripts:
