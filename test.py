@@ -35,6 +35,9 @@ def account_request_pages(path, params={}):
         results.extend(page_results["result"])
     return pd.DataFrame(results)
 
+def calls_by_rate_destination(df):
+    return df[(df["type"] == "call-out") & (df["charge"] > 0)].groupby(["rate_destination"]).agg({"sid": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid": "calls"})
+
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)8s [%(asctime)s] %(message)s')
 
@@ -57,12 +60,17 @@ def main():
     calls_df = account_request_pages(path="/Calls")
     calls_df["charge"] = calls_df["charge"].astype(float)
     calls_df["call_duration"] = calls_df["call_duration"].astype(float)
+    calls_df["dst"] = calls_df["dst"].map(lambda x: str(x).lstrip('+'))
+    calls_df["src"] = calls_df["src"].map(lambda x: str(x).lstrip('+'))
     calls_df["ts"] = calls_df["ts"].apply(dateutil.parser.parse)
     calls_df["month"] = calls_df["ts"].map(lambda x: x.strftime('%Y-%m'))
 
+    # sample call table
     print(calls_df)
 
-    print("\nCalls made to: %s" % list(calls_df.groupby(["rate_destination"]).groups.keys()))
+    calls_out_charged = calls_df[(calls_df["type"] == "call-out") & (calls_df["charge"] > 0)]
+
+    # print("\nCalls made to: %s" % list(calls_df.groupby(["rate_destination"]).groups.keys()))
 
     print("\nMonthly summary")
     print(calls_df.groupby(["month", "type"]).agg({"sid": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid": "calls"}))
@@ -71,13 +79,30 @@ def main():
     print(calls_df[calls_df["type"]=="call-in"].groupby(["dst"])["sid"].count().reset_index().rename(columns={"sid": "calls"}).sort_values("calls", ascending=False))
 
     print("\nOutbound sources")
-    print(calls_df[(calls_df["type"] == "call-out") & (calls_df["charge"] > 0)].groupby(["src"]).agg(
-        {"sid": "count", "charge": "sum"}).rename(columns={"sid": "calls"}).sort_values("charge", ascending=False))
+    print(calls_out_charged.groupby(["src"]).agg({"sid": "count", "charge": "sum"}).rename(columns={"sid": "calls"}).sort_values("charge", ascending=False))
 
     print("\nOutbound rate destinations")
-    print(calls_df[(calls_df["type"] == "call-out") & (calls_df["charge"] > 0)].groupby(["rate_destination"]).agg({"sid": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid": "calls"}))
+    print(calls_by_rate_destination(df=calls_df))
 
+
+    customers_calls = pd.merge(assigned_numbers, calls_out_charged, left_on='number', right_on='src', how='inner', suffixes=('_numbers', '_calls')).reset_index()
+
+    print(customers_calls)
+
+    customers_outbound_summary = customers_calls.groupby(["number", "description", "rate_destination"]).agg({"sid_calls": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid_calls": "calls"})
+    with pd.option_context('display.max_rows', None):
+        print(customers_outbound_summary)
+
+    # print(customers_calls[["number", "description", "ts", "dst", "charge", "rate_destination"]])
     sys.exit(0)
+
+
+    # specific number analysis
+    if len(sys.argv) == 2:
+        number = sys.argv[1]
+        print("\n%s calls" % (number))
+        specific_calls = calls_out_charged[calls_out_charged["src"] == number]
+        print(calls_by_rate_destination(df=specific_calls))
 
 
 if __name__ == "__main__":
