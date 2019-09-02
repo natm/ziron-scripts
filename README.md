@@ -32,6 +32,16 @@ $ export ZIRON_AUTH_TOKEN=xxxxxxxxxxxxxxxxx
 * UK available number search - `aa.py`
 * UK available number purchase - `bb.py`
 
+## Usage
+
+Setup your environment.
+
+```
+virtualenv venv -p python3
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
 ## License ##
 
 MIT
