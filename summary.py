@@ -1,57 +1,30 @@
 #!/usr/bin/env python3
 
-import copy
 import dateutil
 import logging
-import os
 import sys
-import requests
 import pandas as pd
-from requests.auth import HTTPBasicAuth
+
+from zironcommon import startup_check_envvars, account_request, account_request_pages
 
 LOG = logging.getLogger(__name__)
-VERSION = 0.1
 
-
-def account_request(path="", params=None):
-    account_sid = os.environ.get("ZIRON_ACCOUNT_SID")
-    auth_token = os.environ.get("ZIRON_AUTH_TOKEN")
-    auth = HTTPBasicAuth(account_sid, auth_token)
-    resp = requests.get("https://api.ziron.com/v1/Accounts/{account_sid}{path}".format(account_sid=account_sid, path=path), auth=auth, params=params)
-    return resp.json()
-
-def account_request_pages(path, params={}):
-    page = 0
-    pages = 1
-    offset = 0
-    results = []
-    while page < pages:
-        page = page + 1
-        req_params = copy.copy(params)
-        req_params["offset"] = offset
-        page_results = account_request(path=path, params=req_params)
-        pages = page_results["meta"]["last_page"]
-        offset = offset + len(page_results["result"])
-        results.extend(page_results["result"])
-    return pd.DataFrame(results)
 
 def calls_by_rate_destination(df):
     return df[(df["type"] == "call-out") & (df["charge"] > 0)].groupby(["rate_destination"]).agg({"sid": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid": "calls"})
 
+
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)8s [%(asctime)s] %(message)s')
 
-    for varname in ["ZIRON_ACCOUNT_SID", "ZIRON_AUTH_TOKEN"]:
-        if os.environ.get(varname, None) is None:
-            print("Environment variable %s must be set" % (varname))
-            sys.exit(1)
+    startup_check_envvars()
 
     # account summary
     account = account_request()
     print("Account %s" % account["account_ref"])
     print("Balance %s %s" % (account["balance"], account["currency"]))
 
-    # assigned numbers
+    # assigned numbersex
     assigned_numbers = account_request_pages(path="/Numbers/Assigned")
 
     print("\nAll assigned numbers")
@@ -116,16 +89,14 @@ def main():
     print(forwards_calls)
 
 
-    # print(customers_calls[["number", "description", "ts", "dst", "charge", "rate_destination"]])
-    sys.exit(0)
-
-
     # specific number analysis
     if len(sys.argv) == 2:
         number = sys.argv[1]
         print("\n%s calls" % (number))
         specific_calls = calls_out_charged[calls_out_charged["src"] == number]
         print(calls_by_rate_destination(df=specific_calls))
+
+    sys.exit(0)
 
 
 if __name__ == "__main__":
