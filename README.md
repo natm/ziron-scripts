@@ -10,17 +10,7 @@ These we're developed due to the functionality being missing in their [dashboard
 
 ## Environment variables
 
-These environement variables need to be set prior to running any of the scripts:
 
-* `ZIRON_ACCOUNT_SID`
-* `ZIRON_AUTH_TOKEN`
-
-Example:
-
-```
-$ export ZIRON_ACCOUNT_SID=ACxxxxxxxxxxxxxxx
-$ export ZIRON_AUTH_TOKEN=xxxxxxxxxxxxxxxxx
-```
 
 
 ## Scripts
@@ -46,13 +36,22 @@ $ export ZIRON_AUTH_TOKEN=xxxxxxxxxxxxxxxxx
 
 ## Usage
 
-Setup your environment.
+Setup your Python3 environment and set variable for your Ziron account SID and auth token (found on the front page of the dashboard).
 
 ```
 virtualenv venv -p python3
 source venv/bin/activate
 pip3 install -r requirements.txt
+export ZIRON_ACCOUNT_SID=ACxxxxxxxxxxxxxxx
+export ZIRON_AUTH_TOKEN=xxxxxxxxxxxxxxxxx
 ```
+
+Run a script:
+
+```
+./summary.py
+```
+
 
 ## License ##
 
