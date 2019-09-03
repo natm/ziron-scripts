@@ -41,6 +41,11 @@ def calls_by_rate_destination(df):
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)8s [%(asctime)s] %(message)s')
 
+    for varname in ["ZIRON_ACCOUNT_SID", "ZIRON_AUTH_TOKEN"]:
+        if os.environ.get(varname, None) is None:
+            print("Environment variable %s must be set" % (varname))
+            sys.exit(1)
+
     # account summary
     account = account_request()
     print("Account %s" % account["account_ref"])
