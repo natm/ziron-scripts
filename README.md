@@ -8,10 +8,6 @@ A selection of scripts for working with the [Ziron developer API](https://zironu
 
 These we're developed due to the functionality being missing in their [dashboard](https://dashboard.ziron.com/), but the data was easily accessible via their API - I hope these are handy for other customers.
 
-## Environment variables
-
-
-
 
 ## Scripts
 
