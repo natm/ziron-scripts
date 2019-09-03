@@ -25,12 +25,24 @@ $ export ZIRON_AUTH_TOKEN=xxxxxxxxxxxxxxxxx
 
 ## Scripts
 
-* Outbound calls to special numbers - `xx.py`
-* Summary of monthly charged calls by caller ID - `yy.py`
-* Monthly call volume in/out summary caller/callee - `cc.py`
-* Table of assigned numbers - `zz.py`
-* UK available number search - `aa.py`
-* UK available number purchase - `bb.py`
+### summary.py
+
+* Lists all assigned numbers
+* Highlights numbers which do not have emergency addresses accepted yet
+* Monthly summary of calls / charges / duration
+* Inbound calls grouped by destination
+* Outbound calls grouped by source
+* Outbound calls split by rate destination (UK National / UK Mobile etc)
+* Call counts, charges and duration grouped by our assigned numbers
+* Rate destination summaries for our assigned numbers
+* Dog leg call summary (our numbers which went in/out via Ziron instead of the PBX)
+
+### still to do
+
+* UK available number search
+* UK available number purchase
+* UK number "gold" analysis
+
 
 ## Usage
 

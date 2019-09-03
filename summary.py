@@ -87,11 +87,17 @@ def main():
 
     customers_calls = pd.merge(assigned_numbers, calls_out_charged, left_on='number', right_on='src', how='inner', suffixes=('_numbers', '_calls')).reset_index()
 
-    # print(customers_calls)
 
-    customers_outbound_summary = customers_calls.groupby(["number", "description", "rate_destination"]).agg({"sid_calls": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid_calls": "calls"})
+    print("\nCustomer calls")
+    customers_outbound_summary = customers_calls.groupby(["number", "description"]).agg({"sid_calls": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid_calls": "calls"})
     with pd.option_context('display.max_rows', None):
         print(customers_outbound_summary)
+
+    # print(customers_calls)
+    print("\nCustomer calls by rate destination")
+    customers_outbound_rates = customers_calls.groupby(["number", "description", "rate_destination"]).agg({"sid_calls": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid_calls": "calls"})
+    with pd.option_context('display.max_rows', None):
+        print(customers_outbound_rates)
 
 
     # calls between our own numbers
