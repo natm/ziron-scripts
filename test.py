@@ -66,7 +66,7 @@ def main():
     calls_df["month"] = calls_df["ts"].map(lambda x: x.strftime('%Y-%m'))
 
     # sample call table
-    print(calls_df)
+    # print(calls_df)
 
     calls_out_charged = calls_df[(calls_df["type"] == "call-out") & (calls_df["charge"] > 0)]
 
@@ -87,7 +87,7 @@ def main():
 
     customers_calls = pd.merge(assigned_numbers, calls_out_charged, left_on='number', right_on='src', how='inner', suffixes=('_numbers', '_calls')).reset_index()
 
-    print(customers_calls)
+    # print(customers_calls)
 
     customers_outbound_summary = customers_calls.groupby(["number", "description", "rate_destination"]).agg({"sid_calls": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid_calls": "calls"})
     with pd.option_context('display.max_rows', None):
