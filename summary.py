@@ -111,6 +111,11 @@ def main():
     dog_legged = calls_df[(calls_df["src"].isin(our_numbers)) & (calls_df["dst"].isin(our_numbers))].groupby(["src", "dst"]).agg({"sid": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid": "calls"})
     print(dog_legged)
 
+    print("\nForwarded calls")
+    forwards_calls = calls_df[(~calls_df["src"].isin(our_numbers)) & (~calls_df["dst"].isin(our_numbers))].agg({"sid": "count", "charge": "sum", "call_duration": "sum"}).rename(index={"sid": "calls"})
+    print(forwards_calls)
+
+
     # print(customers_calls[["number", "description", "ts", "dst", "charge", "rate_destination"]])
     sys.exit(0)
 
