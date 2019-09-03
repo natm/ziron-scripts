@@ -54,7 +54,7 @@ def main():
     emergency_not_accepted = assigned_numbers[assigned_numbers["emergency_status"] != "accepted"]
 
     print("\nNumbers requiring emergency status fixing")
-    print(emergency_not_accepted[["number", "description", "emergency_status"]].sort_values("emergency_status"))
+    print(emergency_not_accepted[["number", "description", "emergency_status", "status"]].sort_values("emergency_status"))
 
     # call analysis
     calls_df = account_request_pages(path="/Calls")
@@ -92,6 +92,13 @@ def main():
     customers_outbound_summary = customers_calls.groupby(["number", "description", "rate_destination"]).agg({"sid_calls": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid_calls": "calls"})
     with pd.option_context('display.max_rows', None):
         print(customers_outbound_summary)
+
+
+    # calls between our own numbers
+    print("\nCalls between our own numbers that dog legged Ziron")
+    our_numbers = assigned_numbers["number"].tolist()
+    dog_legged = calls_df[(calls_df["src"].isin(our_numbers)) & (calls_df["dst"].isin(our_numbers))].groupby(["src", "dst"]).agg({"sid": "count", "charge": "sum", "call_duration": "sum"}).rename(columns={"sid": "calls"})
+    print(dog_legged)
 
     # print(customers_calls[["number", "description", "ts", "dst", "charge", "rate_destination"]])
     sys.exit(0)
